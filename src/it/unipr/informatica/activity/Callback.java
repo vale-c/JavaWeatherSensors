@@ -3,7 +3,7 @@
  *
  * (c) 2019 Federico Bergenti. All rights reserved.
  */
-package it.unipr.informatica.concurrent;
+package it.unipr.informatica.activity;
 
 public interface Callback<T> {
 	public void onResult(T result);

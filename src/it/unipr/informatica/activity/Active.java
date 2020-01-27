@@ -3,10 +3,10 @@
  *
  * (c) 2019 Federico Bergenti. All rights reserved.
  */
-package it.unipr.informatica.concurrent;
+package it.unipr.informatica.activity;
 
 public abstract class Active {
-	private ThreadPool pool;
+	protected ThreadPool pool;
 	
 	protected Active(int size) {
 		pool = new ThreadPool(size);

@@ -3,7 +3,7 @@
  *
  * (c) 2019 Federico Bergenti. All rights reserved.
  */
-package it.unipr.informatica.concurrent;
+package it.unipr.informatica.activity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ThreadPool {
 		
 		queue = new LinkedList<>();
 		
-		pool = new Thread[size];
+		pool = new Thread[10];
 		
 		for(int i = 0; i < size; i++) {
 			pool[i] = new Worker();
