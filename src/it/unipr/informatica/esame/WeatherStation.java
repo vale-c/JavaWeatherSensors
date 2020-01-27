@@ -40,9 +40,9 @@ public class WeatherStation extends Active implements Runnable {
     
     protected String databaseURL;
 
-    @Override
+  @Override
 	public synchronized void run() { 
-    	while(true) {
+    while(true) {
             try{
                 Thread.sleep(intervalloTemp);
             } catch (Exception e) {}    // ignore exceptions
@@ -58,27 +58,26 @@ public class WeatherStation extends Active implements Runnable {
             System.out.printf("Humidity is: %d %n", humReading);           
             
             try {	
-    			String databaseDriver = bundle.getString("database.driver");
-    			
-    			Class.forName(databaseDriver);
-    						
-    			databaseURL = bundle.getString("database.url");
-    			
-    		} catch (Throwable throwable) {
-    			throwable.printStackTrace();
-    		}
-	   
-	   		try(
+							String databaseDriver = bundle.getString("database.driver");
+
+							Class.forName(databaseDriver);
+
+							databaseURL = bundle.getString("database.url");
+
+						} catch (Throwable throwable) {
+							throwable.printStackTrace();
+						}
+				try(
 				Connection connection = DriverManager.getConnection(databaseURL);
 				PreparedStatement statement = connection.prepareStatement("INSERT INTO LETTURA(TIPO,VALORE) VALUES (0, ?) ", Statement.RETURN_GENERATED_KEYS);
 			){
-			 
+
 			 statement.setInt(1, lettura.tipo); // SET TIPO
 			 statement.setDouble(1, tmpReading); // TEMPERATURE READING
-			 
-			 statement.executeUpdate();
-			 
-			 try (
+		
+				statement.executeUpdate();
+
+			try (
 					ResultSet resultSet = statement.getGeneratedKeys();
 				) {		
 					resultSet.next();
@@ -99,10 +98,10 @@ public class WeatherStation extends Active implements Runnable {
 			){		 
 				 statement.setInt(1, lettura.tipo); // SET TIPO
 				 statement.setDouble(1, humReading); // HUMIDITY READING
-				 
-				 statement.executeUpdate();	 
 
-			 try (
+				statement.executeUpdate();	 
+
+			try (
 					ResultSet resultSet = statement.getGeneratedKeys();
 				) {		
 					resultSet.next();
@@ -117,20 +116,18 @@ public class WeatherStation extends Active implements Runnable {
 				//VUOTO
 	
 			}
-    	}	 
+    }	 
 	}
 
-     
     public static void main(String[] args) { 
 	
 		WeatherStation ws = new WeatherStation(10);
 		
-	    for (int i=1; i < 11; i++) {
-	        Thread tmpThread = new Thread(ws);      
-	        tmpThread.start();
-	        System.out.println("Iniziato Thread # " + i);
-	    }
-		
+		for (int i=1; i < 11; i++) {
+			Thread tmpThread = new Thread(ws);      
+			tmpThread.start();
+			System.out.println("Iniziato Thread # " + i);
+		}
 	}
 }
     
