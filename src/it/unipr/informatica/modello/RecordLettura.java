@@ -3,7 +3,6 @@ package it.unipr.informatica.modello;
 import it.unipr.informatica.esame.SensorManager;
 
 public class RecordLettura implements Lettura {	
-	int id;
 	public int tipo;
 
 	public RecordLettura() {}

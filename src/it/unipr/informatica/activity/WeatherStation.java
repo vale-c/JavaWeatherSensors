@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
 import it.unipr.informatica.modello.RecordLettura;
 
 public class WeatherStation implements Runnable {
-  int tmpReading;  // actual tmpSensor reading
-  int humReading;  // actual humSensor reading
+	int tmpReading;  // actual tmpSensor reading
+	int humReading;  // actual humSensor reading
     
-  RecordLettura lettura; // lettura
+  	RecordLettura lettura; // lettura
     
 	WeatherStation(int size) {
 		lettura = new RecordLettura();
@@ -37,7 +37,7 @@ public class WeatherStation implements Runnable {
 	int intervalloTemp = Integer.parseInt(it); 
 	int intervalloHum = Integer.parseInt(iu);
 
-  @Override
+	@Override
 	public synchronized void run() { 
     while(true) {
 		try{
@@ -48,7 +48,7 @@ public class WeatherStation implements Runnable {
 			System.out.printf("Temperature is: %d°C %n", tmpReading);
 			
 			try{
-					Thread.sleep(intervalloHum);
+				Thread.sleep(intervalloHum);
 			} catch (Exception e) {}    // ignore exceptions
 			
 			humReading = lettura.getHumReading();
@@ -72,9 +72,9 @@ public class WeatherStation implements Runnable {
 				statement.executeUpdate();
 
 				try (
-						ResultSet resultSet = statement.getGeneratedKeys();
-					) {		
-						resultSet.next();
+					ResultSet resultSet = statement.getGeneratedKeys();
+				) {		
+					resultSet.next();
 						
 					resultSet.getInt(1);
 						
@@ -89,15 +89,15 @@ public class WeatherStation implements Runnable {
 				try (
 					Connection connection = DriverManager.getConnection(databaseURL);
 					PreparedStatement statement = connection.prepareStatement("INSERT INTO LETTURA(TIPO,VALORE) VALUES (1, ?) ", Statement.RETURN_GENERATED_KEYS);
-					){		 
-						statement.setInt(1, lettura.tipo); // SET TIPO
-						statement.setDouble(1, humReading); // HUMIDITY READING
-						statement.executeUpdate();
+				){		 
+					statement.setInt(1, lettura.tipo); // SET TIPO
+					statement.setDouble(1, humReading); // HUMIDITY READING
+					statement.executeUpdate();
 
 					try (
-							ResultSet resultSet = statement.getGeneratedKeys();
-						) {		
-							resultSet.next();
+						ResultSet resultSet = statement.getGeneratedKeys();
+					) {		
+						resultSet.next();
 								
 						resultSet.getInt(1);
 						
