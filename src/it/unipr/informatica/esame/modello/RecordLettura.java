@@ -1,7 +1,6 @@
-package it.unipr.informatica.esame.database;
+package it.unipr.informatica.esame.modello;
 
 import it.unipr.informatica.esame.SensorManager;
-import it.unipr.informatica.esame.modello.Lettura;
 
 public class RecordLettura implements Lettura {	
 	int id;
