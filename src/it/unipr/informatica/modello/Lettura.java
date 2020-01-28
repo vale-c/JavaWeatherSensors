@@ -1,4 +1,4 @@
-package it.unipr.informatica.esame.modello;
+package it.unipr.informatica.modello;
 
 public interface Lettura{ 
 	public int getTipo();

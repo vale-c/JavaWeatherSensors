@@ -1,4 +1,4 @@
-package it.unipr.informatica.esame.modello;
+package it.unipr.informatica.modello;
 
 import it.unipr.informatica.esame.SensorManager;
 

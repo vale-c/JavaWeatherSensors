@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
-import it.unipr.informatica.esame.modello.RecordLettura;
+import it.unipr.informatica.modello.RecordLettura;
 
 public class WeatherStation implements Runnable {
   int tmpReading;  // actual tmpSensor reading
