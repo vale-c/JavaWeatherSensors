@@ -28,7 +28,7 @@ public class WeatherStation implements Runnable {
 		lettura = new RecordLettura();
 	}
 
-	protected String databaseURL; //create var to hold DB url value
+	private String databaseURL; //create var to hold DB url value
 	ResourceBundle bundle = ResourceBundle.getBundle("it.unipr.informatica.esame.configuration"); //create config bundle
 	
 	String it = bundle.getString("periodo_temperatura"); // periodo sensore temperatura
@@ -39,38 +39,42 @@ public class WeatherStation implements Runnable {
 
 	@Override
 	public synchronized void run() { 
-    while(true) {
-		try{
-			Thread.sleep(intervalloTemp);
-			} catch (Exception e) {}    // ignore exceptions
-
-			tmpReading = lettura.getTmpReading();
-			System.out.printf("Temperature is: %d°C %n", tmpReading);
+		while(true) {
+			try {
+				Thread.sleep(intervalloTemp);
+				} catch (Exception e) {}    // ignore exceptions
 			
-			try{
-				Thread.sleep(intervalloHum);
-			} catch (Exception e) {}    // ignore exceptions
-			
-			humReading = lettura.getHumReading();
-			System.out.printf("Humidity is: %d %n", humReading);           
-			
+				tmpReading = lettura.getTmpReading();
+				System.out.printf("Temperature is: %d°C %n", tmpReading);
+				
+				try {
+					Thread.sleep(intervalloHum);
+				} catch (Exception e) {}    // ignore exceptions
+				
+				humReading = lettura.getHumReading();
+				System.out.printf("Humidity is: %d %n", humReading);
+				
+			/*** DATABASE PART ***/
+				
 			try {	
 				String databaseDriver = bundle.getString("database.driver"); //get the driver
 				Class.forName(databaseDriver); //and load it
+				
 				databaseURL = bundle.getString("database.url"); //get the DB url
+				
 			} catch (Throwable throwable) {
 				throwable.printStackTrace();
 			}
-		
-			try(
+				
+			try (
 				Connection connection = DriverManager.getConnection(databaseURL);
 				PreparedStatement statement = connection.prepareStatement("INSERT INTO LETTURA(TIPO,VALORE) VALUES (0, ?) ", Statement.RETURN_GENERATED_KEYS);
-				){
-
+			){
+	
 				statement.setInt(1, lettura.tipo); // SET TIPO
-				statement.setDouble(1, tmpReading); // TEMPERATURE READING	
+				statement.setInt(1, tmpReading); // TEMPERATURE READING	
 				statement.executeUpdate();
-
+	
 				try (
 					ResultSet resultSet = statement.getGeneratedKeys();
 				) {		
@@ -86,30 +90,32 @@ public class WeatherStation implements Runnable {
 					//VUOTO
 				}
 
-				try (
-					Connection connection = DriverManager.getConnection(databaseURL);
-					PreparedStatement statement = connection.prepareStatement("INSERT INTO LETTURA(TIPO,VALORE) VALUES (1, ?) ", Statement.RETURN_GENERATED_KEYS);
-				){		 
-					statement.setInt(1, lettura.tipo); // SET TIPO
-					statement.setDouble(1, humReading); // HUMIDITY READING
-					statement.executeUpdate();
+			try (
+				Connection connection = DriverManager.getConnection(databaseURL);
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO LETTURA(TIPO,VALORE) VALUES (1, ?) ", Statement.RETURN_GENERATED_KEYS);
+			){		 
+				statement.setInt(1, lettura.tipo); // SET TIPO
+				statement.setInt(1, humReading); // HUMIDITY READING
+				statement.executeUpdate();
 
-					try (
-						ResultSet resultSet = statement.getGeneratedKeys();
-					) {		
-						resultSet.next();
-								
-						resultSet.getInt(1);
+			try (
+				ResultSet resultSet = statement.getGeneratedKeys();
+			) {		
+				resultSet.next();
 						
-						} catch (SQLException exception) {
-							exception.printStackTrace();
-							throw exception;
-						}
-					} catch (SQLException exception) {
-						//VUOTO	
-					}
-				}	 
+				resultSet.getInt(1);
+				
+				} catch (SQLException exception) {
+					exception.printStackTrace();
+					throw exception;
+				}
+			} catch (SQLException exception) {
+				//VUOTO	
 			}
+			
+		  /*** END OF DATABASE PART ***/
+		}	 
+	}
 
     public static void main(String[] args) { 
 	
