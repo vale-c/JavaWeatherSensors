@@ -98,20 +98,20 @@ public class WeatherStation implements Runnable {
 				statement.setInt(1, humReading); // HUMIDITY READING
 				statement.executeUpdate();
 
-			try (
-				ResultSet resultSet = statement.getGeneratedKeys();
-			) {		
-				resultSet.next();
-						
-				resultSet.getInt(1);
-				
+				try (
+					ResultSet resultSet = statement.getGeneratedKeys();
+				) {		
+					resultSet.next();
+							
+					resultSet.getInt(1);
+					
+					} catch (SQLException exception) {
+						exception.printStackTrace();
+						throw exception;
+					}
 				} catch (SQLException exception) {
-					exception.printStackTrace();
-					throw exception;
+					//VUOTO	
 				}
-			} catch (SQLException exception) {
-				//VUOTO	
-			}
 			
 		  /*** END OF DATABASE PART ***/
 		}	 
